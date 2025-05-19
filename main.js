@@ -10,7 +10,7 @@ let topArtists = [];
 // Authorization. Key from spotify api website, must send a waypoint through their settings
 function authorize() {
   const client_id = 'dbc874061f684f23a2e2679152122b50';
-  const redirect_uri = "https://choieyj.github.io/";
+  const redirect_uri = 'https://choieyj.github.io/';
   const scopes = 'user-top-read';
 
   const d = new Date();
