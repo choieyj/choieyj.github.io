@@ -81,6 +81,8 @@ artistBtn.onclick = async () => {
         card.appendChild(name);
         artistList.appendChild(card);
       });
+
+      artistBtn.style.display = 'none';
     }
   } catch (err) {
     output.style.display = 'block';
