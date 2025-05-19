@@ -1,43 +1,161 @@
-@import url("https://fonts.googleapis.com/css2?family=Poppins&display=swap");
+/* Base Reset */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
 
 body {
-  font-family: "Poppins", sans-serif;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background-color: #f7f9fb;
+  color: #333;
+  padding: 20px;
+  line-height: 1.6;
 }
 
-.btn.dropdown-toggle {
-  width: 150px;
+.container {
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+h1 {
   text-align: center;
+  margin-bottom: 30px;
+  color: #1db954;
 }
 
-span.caret {
-  position: absolute;
-  left: 90%;
-  top: 45%;
+/* Navigation Styling */
+.navbar {
+  display: flex;
+  justify-content: center;
+  gap: 40px;
+  padding: 15px 0;
+  background-color: #ffffff;
+  border: 2px solid #1db954;
+  margin-bottom: 30px;
+}
+
+.nav-link {
+  font-size: 1.25rem;
+  color: #1db954;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+.nav-link:hover {
+  text-decoration: underline;
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 30px;
 }
 
 label {
-  padding-top: 5px;
+  font-size: 1rem;
+  margin-bottom: 10px;
 }
 
-.form-label {
-  padding-left: 0px !important;
+input[type="text"] {
+  padding: 10px;
+  width: 300px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  margin-bottom: 15px;
 }
 
-.form-control {
-  border-radius: 100px;
-}
-
-.btn-success {
-  background-color: #3b7d4a im !important;
-  border-radius: 100px;
+button {
+  padding: 10px 20px;
+  background-color: #1db954;
   border: none;
+  border-radius: 4px;
+  color: white;
   cursor: pointer;
+  font-size: 1rem;
 }
 
-.btn-success:hover {
-  background-color: #4daf64;
+button:hover {
+  background-color: #17a74a;
 }
 
-img.track {
-  border: 3px solid #8a8a8a;
+#loading {
+  text-align: center;
+  font-weight: bold;
+  margin: 20px 0;
+}
+
+.hidden {
+  display: none;
+}
+
+/* Artist Table Styling */
+.artist-section {
+  margin-bottom: 40px;
+}
+
+.artist-name {
+  font-size: 1.4rem;
+  margin-bottom: 10px;
+  color: #1db954;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 20px;
+}
+
+thead {
+  background-color: #e5f6ed;
+}
+
+th, td {
+  border: 1px solid #ddd;
+  padding: 12px;
+  text-align: left;
+}
+
+tr:nth-child(even) {
+  background-color: #f9f9f9;
+}
+
+a {
+  color: #1db954;
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+/* Home Page Styling */
+.home-main {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 60vh;
+  text-align: center;
+}
+
+.home-title {
+  font-size: 2.5rem;
+  color: #1db954;
+  margin-bottom: 1rem;
+}
+
+.home-subtitle {
+  font-size: 1.25rem;
+  color: #555;
+}
+
+/* About Page Styling */
+.about-main {
+  padding: 0 20px;
+  text-align: left;
+  font-size: 1.1rem;
+  line-height: 1.8;
+  color: #444;
 }
