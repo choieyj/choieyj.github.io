@@ -1,7 +1,7 @@
 import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm';
 
 const clientId = 'dbc874061f684f23a2e2679152122b50';
-const redirect = "https://choieyj.github.io/index";
+const redirect = "https://choieyj.github.io/tool";
 const AUTHORIZE = "https://accounts.spotify.com/authorize";
 
 const supabaseUrl = 'https://elvempcvrbivdsxsxqjg.supabase.co';
