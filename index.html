@@ -114,6 +114,9 @@
     artistBtn.onclick = async () => {
       output.style.display = 'block';
       output.textContent = "🎧 Fetching your top artists...";
+      
+      var urlParams = new URLSearchParams(window.location.search);
+      var accessToken = urlParams.get('access_token');
 
       try {
         const { data, error } = await supabase.functions.invoke('get-top-artists', {
