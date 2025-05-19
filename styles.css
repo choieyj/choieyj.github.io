@@ -102,9 +102,12 @@ button:hover {
 
 .artist-card img {
   width: 100%;
+  height: 160px;
+  object-fit: cover;
   border-radius: 8px;
   margin-bottom: 0.5rem;
 }
+
 
 .artist-card h3 {
   font-size: 0.95rem;
