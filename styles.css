@@ -171,3 +171,24 @@ button:hover {
   border-top: 1px solid #333;
   margin: 1rem 0;
 }
+
+.concert-item {
+  margin-bottom: 1.5rem;
+  padding: 0.5rem 0;
+}
+
+.concert-item p {
+  font-size: 0.95rem;
+  margin: 0.3rem 0;
+}
+
+.concert-item a {
+  color: #1DB954;
+  font-weight: bold;
+  text-decoration: none;
+}
+
+.concert-item a:hover {
+  text-decoration: underline;
+}
+
