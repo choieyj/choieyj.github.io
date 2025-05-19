@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Test Supabase Edge Function</title>
+</head>
+<body>
+  <h1>Supabase Edge Function Test</h1>
+  <button id="testBtn">Invoke Edge Function</button>
+  <pre id="output"></pre>
+  <script type="module">
+    import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm';
+
+
+    var clientId = 'dbc874061f684f23a2e2679152122b50';
+    var clientSecret = '00097a3c51a241198ea2ab59c190ffa7';
+
+    var redirect = "https://choieyj.github.io/";
+
+    const AUTHORIZE = "https://accounts.spotify.com/authorize"
+
+    const TOKEN = "https://accounts.spotify.com/api/token"
+    const ARTISTS = "https://accounts.spotify.com/v1/me/top/artists?&limit=5"
+
+    const supabaseUrl = 'https://elvempcvrbivdsxsxqjg.supabase.co';
+    const supabaseAnonKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVsdmVtcGN2cmJpdmRzeHN4cWpnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDc2Mzc3MjksImV4cCI6MjA2MzIxMzcyOX0.7Dza0Hkct2WD7WfAQ125phszFlPgSMBFd1V5VkN8V-s';
+
+    const supabase = createClient(supabaseUrl, supabaseAnonKey);
+
+    const testBtn = document.getElementById('testBtn');
+    const output = document.getElementById('output');
+
+    testBtn.onclick = async () => {
+      let url = AUTHORIZE;
+      url += "?client_id=" + clientId;
+      url += "&response_type=code";
+      url += "&redirect_uri=" +encodeURI(redirect);
+      url += "&show_dialog=true";
+      url += "&scope=user-read-email user-read-playback-state user-top-read";
+      window.location.href = url;
+      var urlParams = new URLSearchParams(window.location.search);
+      var code = urlParams.get('code');
+
+
+
+      output.textContent = "⏳ Calling edge function...";
+      try {
+        const { data, error } = await supabase.functions.invoke('get-token', {
+          body: { code }
+        });
+
+        if (error) {
+          output.textContent = "❌ Error:\n" + JSON.stringify(error, null, 2);
+        } else {
+          output.textContent = "✅ Success:\n" + JSON.stringify(data, null, 2);
+        }
+      } catch (err) {
+        output.textContent = "💥 Unexpected error:\n" + err.message;
+      }
+    };
+  </script>
+</body>
+</html>
