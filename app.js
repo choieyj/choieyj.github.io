@@ -137,6 +137,7 @@ async function showConcerts(artists, lat, lon) {
       } else {
         events.forEach(event => {
           const el = document.createElement('div');
+          el.className = 'concert-item';
           el.innerHTML = `
             <p><strong>${event.name}</strong></p>
             <p>${event.dates.start.localDate} @ ${event._embedded.venues[0].name}</p>
