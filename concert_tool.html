@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Find Concerts - TuneTrail</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header>
+    <nav class="navbar centered-navbar">
+      <a href="index.html" class="nav-link">Home</a>
+      <a href="about.html" class="nav-link">About</a>
+      <a href="concert-tool.html" class="nav-link">Tool</a>
+    </nav>
+  </header>
+
+  <main class="container">
+    <h1>Find Concerts for Your Top Artists</h1>
+    <button id="login" onclick="authorize()">Login with Spotify</button>
+    <div id="loading" class="hidden">Loading concerts...</div>
+    <div id="concerts"></div>
+  </main>
+
+  <script src="app.js"></script>
+</body>
+</html>
