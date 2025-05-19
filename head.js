@@ -4,7 +4,7 @@ function authorize() {
     const redirectUri = 'https://choieyj.github.io/';
 
     // Construct the authorization URL
-    const authUrl = `https://accounts.spotify.com/authorize?client_id=${clientId}&response_type=code&redirect_uri=${redirectUri}`;
+    const authUrl = `https://accounts.spotify.com/authorize?client_id=${clientId}&response_type=token&redirect_uri=${redirectUri}`;
 
     // Redirect the user to the authorization URL
     window.location.href = authUrl;
