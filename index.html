@@ -15,13 +15,20 @@
       display: flex;
       flex-direction: column;
       align-items: center;
-      justify-content: center;
-      height: 100vh;
+      min-height: 100vh;
+      padding-bottom: 50px;
     }
 
     h1 {
       font-size: 2.5rem;
-      margin-bottom: 1rem;
+      margin-top: 40px;
+    }
+
+    p {
+      font-size: 1rem;
+      margin: 0.5rem 0 2rem;
+      text-align: center;
+      max-width: 90%;
     }
 
     button {
@@ -40,14 +47,47 @@
       background-color: #1aa34a;
     }
 
-    pre {
-      margin-top: 30px;
-      max-width: 90%;
+    .artist-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+      gap: 1.5rem;
+      margin-top: 2rem;
+      width: 90%;
+      max-width: 800px;
+    }
+
+    .artist-card {
+      background-color: #222;
+      padding: 1rem;
+      border-radius: 12px;
+      text-align: center;
+    }
+
+    .artist-card img {
+      width: 100%;
+      border-radius: 8px;
+      margin-bottom: 0.5rem;
+    }
+
+    .artist-card h3 {
+      font-size: 1rem;
+      margin: 0;
+    }
+
+    #artistList {
+      display: none;
+      margin-top: 20px;
+    }
+
+    #output {
+      margin-top: 20px;
       white-space: pre-wrap;
       word-break: break-word;
+      max-width: 90%;
       background: #222;
-      padding: 20px;
+      padding: 1rem;
       border-radius: 10px;
+      display: none;
     }
   </style>
 </head>
@@ -56,7 +96,9 @@
   <p>Log in to connect your Spotify account and discover concerts based on your top artists.</p>
   <button id="loginBtn">Login with Spotify</button>
   <button id="artistBtn" style="display: none;">Get Your Top Artists Now</button>
-  <pre id="output" style="display: none;"></pre>
+  
+  <div id="artistList" class="artist-grid"></div>
+  <pre id="output"></pre>
 
   <script type="module">
     import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm';
@@ -71,12 +113,12 @@
 
     const loginBtn = document.getElementById('loginBtn');
     const artistBtn = document.getElementById('artistBtn');
+    const artistList = document.getElementById('artistList');
     const output = document.getElementById('output');
 
-    // Handle Spotify redirect with code
     window.onload = async () => {
-      var urlParams = new URLSearchParams(window.location.search);
-      var code = urlParams.get('code');
+      const urlParams = new URLSearchParams(window.location.search);
+      const code = urlParams.get('code');
 
       if (code) {
         output.style.display = 'block';
@@ -89,13 +131,9 @@
           if (error) {
             output.textContent = "❌ Error:\n" + JSON.stringify(error, null, 2);
           } else {
-            output.textContent = "✅ Access Token Response:\n" + JSON.stringify(data, null, 2);
-
-            // ✅ Hide login button, show artist button
+            output.textContent = "✅ Token Received.";
             loginBtn.style.display = 'none';
             artistBtn.style.display = 'inline-block';
-
-            // Store access token in memory (or sessionStorage/localStorage if needed)
             window.accessToken = data.access_token;
           }
         } catch (err) {
@@ -104,31 +142,48 @@
       }
     };
 
-    // Start Spotify login flow
     loginBtn.onclick = () => {
       const url = `${AUTHORIZE}?client_id=${clientId}&response_type=code&redirect_uri=${encodeURIComponent(redirect)}&scope=user-read-email user-read-playback-state user-top-read&show_dialog=true`;
       window.location.href = url;
     };
 
-    // Placeholder for top artist call
     artistBtn.onclick = async () => {
       output.style.display = 'block';
       output.textContent = "🎧 Fetching your top artists...";
-      
-      var urlParams = new URLSearchParams(window.location.search);
-      var accessToken = urlParams.get('access_token');
 
       try {
         const { data, error } = await supabase.functions.invoke('get-top-artists', {
-          body: { access_token: window.accessToken } // or use localStorage if persisted
+          body: { access_token: window.accessToken }
         });
 
         if (error) {
           output.textContent = "❌ Error fetching artists:\n" + JSON.stringify(error, null, 2);
         } else {
-          output.textContent = "🎶 Your Top Artists:\n" + JSON.stringify(data, null, 2);
+          output.style.display = 'none';
+          artistList.style.display = 'grid';
+          artistList.innerHTML = '';
+
+          // Store names for use in another API
+          window.topArtistNames = data.items.map(item => item.name);
+
+          data.items.forEach((artist, index) => {
+            const card = document.createElement('div');
+            card.className = 'artist-card';
+
+            const img = document.createElement('img');
+            img.src = artist.images[1]?.url || artist.images[0]?.url || '';
+            img.alt = artist.name;
+
+            const name = document.createElement('h3');
+            name.textContent = `${index + 1}. ${artist.name}`;
+
+            card.appendChild(img);
+            card.appendChild(name);
+            artistList.appendChild(card);
+          });
         }
       } catch (err) {
+        output.style.display = 'block';
         output.textContent = "💥 Unexpected error:\n" + err.message;
       }
     };
