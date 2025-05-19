@@ -21,7 +21,7 @@ function authorize() {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/x-www-form-urlencoded',
-                'Authorization': 'Basic ' + btoa(clientId + ':' + '0cb53530a9634d40b24f69ab49644bb2') //Use your client secret
+                'Authorization': 'Basic ' + btoa(clientId + ':' + '00097a3c51a241198ea2ab59c190ffa7') //Use your client secret
             },
             body: new URLSearchParams({
                 'grant_type': 'authorization_code',
