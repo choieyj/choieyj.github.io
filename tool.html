@@ -7,15 +7,21 @@
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
+  <header>
+    <nav class="navbar centered-navbar">
+      <a href="index.html" class="nav-link">Home</a>
+      <a href="about.html" class="nav-link">About</a>
+      <a href="tool.html" class="nav-link">Tool</a>
+    </nav>
+  </header>
+
   <h1>Welcome to TuneTrail</h1>
-  
-  <p>Log in to connect your Spotify account and discover concerts based on your top artists.</p>
+  <p id="loginMessage">Log in to connect your Spotify account and discover concerts based on your top artists.</p>
+
   <button id="loginBtn">Login with Spotify</button>
-  
   <button id="artistBtn" style="display: none;">Get Your Top Artists Now</button>
+
   <div id="artistList" class="artist-grid"></div>
   <pre id="output"></pre>
-
-  <script type="module" src="app.js"></script>
 </body>
 </html>
