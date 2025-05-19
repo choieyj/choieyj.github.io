@@ -129,8 +129,6 @@ async function showConcerts(artists, lat, lon) {
       const data = await res.json();
       const events = data._embedded?.events || [];
 
-      const seenEvents = new Set(); // ⛔ prevent duplicate names
-
       const section = document.createElement('section');
       section.innerHTML = `<h2>${artist}</h2>`;
 
@@ -138,11 +136,6 @@ async function showConcerts(artists, lat, lon) {
         section.innerHTML += `<p>No upcoming concerts found nearby.</p>`;
       } else {
         events.forEach(event => {
-          const eventKey = `${event.name}_${event.dates.start.localDate}`; // Unique events only 
-
-          if (seenEvents.has(eventKey)) return;
-          seenEvents.add(eventKey);
-
           const el = document.createElement('div');
           el.className = 'concert-item';
           el.innerHTML = `
