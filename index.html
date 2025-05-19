@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <!-- Metadatas -->
-  <title>Spotify Stats | Eugene </title>
+  <title>Spotify Stats | dragonGR</title>
   <meta name="author" content="dragonGR">
   <meta name="viewport" content="width=device-width", initial-scale=1">
   <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.4.1/semantic.min.css">
@@ -32,6 +32,8 @@
               <button class="ui black fluid button" id="login-button" onclick="authorize()"><i class="sync icon"></i>Login</button>
            </div>
            <div class="ui padded segment" id="button-segment">
+              <button class="ui black fluid button" id="track-button" onclick="getTopTracks()"><i class="sync icon"></i>Fetch top tracks</button>
+              <br>
               <button class="ui black fluid button" id="artist-button" onclick="getTopArtists()"><i class="sync icon"></i>Fetch top artists</button>
            </div>
            <div class="ui padded segment" id="timeForm">
