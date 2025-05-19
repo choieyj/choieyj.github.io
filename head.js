@@ -10,6 +10,7 @@ let limit = '20';
 // Authorization. Key from spotify api website, must send a waypoint through their settings
 // https://developer.spotify.com/documentation/general/guides/authorization-guide/
 function authorize() {
+
     const client_id = 'dbc874061f684f23a2e2679152122b50';
     const redirect_uri = 'https://choieyj.github.io/';
     const scopes = 'user-top-read playlist-modify-public playlist-modify-private';
@@ -27,6 +28,7 @@ function authorize() {
     url += '&client_id=' + encodeURIComponent(client_id);
     url += '&scope=' + encodeURIComponent(scopes);
     url += '&redirect_uri=' + encodeURIComponent(redirect_uri);
+    console.log(url)
     // Paste the final URL format
     window.location = url;
 }
