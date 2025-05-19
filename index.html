@@ -75,8 +75,8 @@
 
     // Handle Spotify redirect with code
     window.onload = async () => {
-      const urlParams = new URLSearchParams(window.location.search);
-      const code = urlParams.get('code');
+      var urlParams = new URLSearchParams(window.location.search);
+      var code = urlParams.get('code');
 
       if (code) {
         output.style.display = 'block';
