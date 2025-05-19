@@ -12,10 +12,11 @@ const loginBtn = document.getElementById('loginBtn');
 const artistBtn = document.getElementById('artistBtn');
 const artistList = document.getElementById('artistList');
 const output = document.getElementById('output');
+const TICKETMASTER_KEY = '9W4IAiuiI9Oipich4R4AivG8IGyu8ERf';
 
 window.onload = async () => {
-  var urlParams = new URLSearchParams(window.location.search);
-  var code = urlParams.get('code');
+  const urlParams = new URLSearchParams(window.location.search);
+  const code = urlParams.get('code');
 
   if (code) {
     output.style.display = 'block';
@@ -50,7 +51,7 @@ artistBtn.onclick = async () => {
 
   try {
     const { data, error } = await supabase.functions.invoke('get-top-artists', {
-      body: { access_token: window.accessToken } // ✅ this is correct
+      body: { access_token: window.accessToken }
     });
 
     if (error) {
@@ -69,6 +70,8 @@ artistBtn.onclick = async () => {
         const img = document.createElement('img');
         img.src = artist.images[1]?.url || artist.images[0]?.url || '';
         img.alt = artist.name;
+        img.style.objectFit = 'cover';
+        img.style.height = '160px';
 
         const name = document.createElement('h3');
         name.textContent = `${index + 1}. ${artist.name}`;
@@ -78,11 +81,75 @@ artistBtn.onclick = async () => {
         artistList.appendChild(card);
       });
 
-      // ✅ Properly hide the button after success
       artistBtn.style.display = 'none';
+
+      const userLocation = await getUserLocation();
+      if (userLocation) {
+        const { lat, lon } = userLocation;
+        await showConcerts(window.topArtistNames, lat, lon);
+      }
     }
   } catch (err) {
     output.style.display = 'block';
     output.textContent = "💥 Unexpected error:\n" + err.message;
   }
 };
+
+async function getUserLocation() {
+  return new Promise((resolve) => {
+    if (!navigator.geolocation) {
+      alert("Geolocation not supported");
+      return resolve(null);
+    }
+
+    navigator.geolocation.getCurrentPosition(
+      (position) => {
+        resolve({
+          lat: position.coords.latitude,
+          lon: position.coords.longitude
+        });
+      },
+      () => {
+        alert("Could not get location. Please allow location access.");
+        resolve(null);
+      }
+    );
+  });
+}
+
+async function showConcerts(artists, lat, lon) {
+  const resultDiv = document.getElementById('results');
+  resultDiv.innerHTML = '';
+
+  for (const artist of artists) {
+    const tmUrl = `https://app.ticketmaster.com/discovery/v2/events.json?apikey=${TICKETMASTER_KEY}&keyword=${encodeURIComponent(artist)}&latlong=${lat},${lon}&radius=100&unit=miles`;
+
+    try {
+      const res = await fetch(tmUrl);
+      const data = await res.json();
+      const events = data._embedded?.events || [];
+
+      const section = document.createElement('section');
+      section.innerHTML = `<h2>${artist}</h2>`;
+
+      if (events.length === 0) {
+        section.innerHTML += `<p>No upcoming concerts found nearby.</p>`;
+      } else {
+        events.forEach(event => {
+          const el = document.createElement('div');
+          el.innerHTML = `
+            <p><strong>${event.name}</strong></p>
+            <p>${event.dates.start.localDate} @ ${event._embedded.venues[0].name}</p>
+            <a href="${event.url}" target="_blank">Buy Tickets</a>
+            <hr/>
+          `;
+          section.appendChild(el);
+        });
+      }
+
+      resultDiv.appendChild(section);
+    } catch (err) {
+      console.error(`Error fetching concerts for ${artist}:`, err);
+    }
+  }
+}
