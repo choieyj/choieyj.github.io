@@ -125,3 +125,49 @@ button:hover {
   border-radius: 10px;
   display: none;
 }
+
+/* Concert Results */
+#results {
+  max-width: 900px;
+  margin: 2rem auto;
+  padding: 1rem;
+}
+
+#results section {
+  background-color: #1b1b1b;
+  border-radius: 10px;
+  padding: 1rem 1.5rem;
+  margin-bottom: 2rem;
+  box-shadow: 0 0 8px rgba(0,0,0,0.4);
+}
+
+#results h2 {
+  color: #1DB954;
+  font-size: 1.4rem;
+  margin-bottom: 1rem;
+  border-bottom: 1px solid #333;
+  padding-bottom: 0.5rem;
+}
+
+#results p {
+  margin: 0.3rem 0;
+  font-size: 0.95rem;
+}
+
+#results a {
+  display: inline-block;
+  margin-top: 0.5rem;
+  color: #1DB954;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+#results a:hover {
+  text-decoration: underline;
+}
+
+#results hr {
+  border: none;
+  border-top: 1px solid #333;
+  margin: 1rem 0;
+}
