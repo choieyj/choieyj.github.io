@@ -55,6 +55,7 @@
   <h1>Welcome to TuneTrail</h1>
   <p>Log in to connect your Spotify account and discover concerts based on your top artists.</p>
   <button id="loginBtn">Login with Spotify</button>
+  <button id="artistBtn" style="display: none;">Get Your Top Artists Now</button>
   <pre id="output" style="display: none;"></pre>
 
   <script type="module">
@@ -69,6 +70,7 @@
     const supabase = createClient(supabaseUrl, supabaseAnonKey);
 
     const loginBtn = document.getElementById('loginBtn');
+    const artistBtn = document.getElementById('artistBtn');
     const output = document.getElementById('output');
 
     // Handle Spotify redirect with code
@@ -88,6 +90,13 @@
             output.textContent = "❌ Error:\n" + JSON.stringify(error, null, 2);
           } else {
             output.textContent = "✅ Access Token Response:\n" + JSON.stringify(data, null, 2);
+
+            // ✅ Hide login button, show artist button
+            loginBtn.style.display = 'none';
+            artistBtn.style.display = 'inline-block';
+
+            // Store access token in memory (or sessionStorage/localStorage if needed)
+            window.accessToken = data.access_token;
           }
         } catch (err) {
           output.textContent = "💥 Unexpected error:\n" + err.message;
@@ -99,6 +108,26 @@
     loginBtn.onclick = () => {
       const url = `${AUTHORIZE}?client_id=${clientId}&response_type=code&redirect_uri=${encodeURIComponent(redirect)}&scope=user-read-email user-read-playback-state user-top-read&show_dialog=true`;
       window.location.href = url;
+    };
+
+    // Placeholder for top artist call
+    artistBtn.onclick = async () => {
+      output.style.display = 'block';
+      output.textContent = "🎧 Fetching your top artists...";
+
+      try {
+        const { data, error } = await supabase.functions.invoke('get-top-artists', {
+          body: { access_token: window.accessToken } // or use localStorage if persisted
+        });
+
+        if (error) {
+          output.textContent = "❌ Error fetching artists:\n" + JSON.stringify(error, null, 2);
+        } else {
+          output.textContent = "🎶 Your Top Artists:\n" + JSON.stringify(data, null, 2);
+        }
+      } catch (err) {
+        output.textContent = "💥 Unexpected error:\n" + err.message;
+      }
     };
   </script>
 </body>
