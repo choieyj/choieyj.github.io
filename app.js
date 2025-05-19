@@ -14,8 +14,8 @@ const artistList = document.getElementById('artistList');
 const output = document.getElementById('output');
 
 window.onload = async () => {
-  const urlParams = new URLSearchParams(window.location.search);
-  const code = urlParams.get('code');
+  var urlParams = new URLSearchParams(window.location.search);
+  var code = urlParams.get('code');
 
   if (code) {
     output.style.display = 'block';
@@ -47,6 +47,9 @@ loginBtn.onclick = () => {
 artistBtn.onclick = async () => {
   output.style.display = 'block';
   output.textContent = "🎧 Fetching your top artists...";
+  
+  var urlParams = new URLSearchParams(window.location.search);
+  var accessToken = urlParams.get('access_token');
 
   try {
     const { data, error } = await supabase.functions.invoke('get-top-artists', {
