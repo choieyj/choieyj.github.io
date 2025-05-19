@@ -47,13 +47,10 @@ loginBtn.onclick = () => {
 artistBtn.onclick = async () => {
   output.style.display = 'block';
   output.textContent = "🎧 Fetching your top artists...";
-  
-  var urlParams = new URLSearchParams(window.location.search);
-  var accessToken = urlParams.get('access_token');
 
   try {
     const { data, error } = await supabase.functions.invoke('get-top-artists', {
-      body: { access_token: window.accessToken }
+      body: { access_token: window.accessToken } // ✅ this is correct
     });
 
     if (error) {
@@ -63,7 +60,6 @@ artistBtn.onclick = async () => {
       artistList.style.display = 'grid';
       artistList.innerHTML = '';
 
-      // Store names for use in another API
       window.topArtistNames = data.items.map(item => item.name);
 
       data.items.forEach((artist, index) => {
@@ -82,6 +78,7 @@ artistBtn.onclick = async () => {
         artistList.appendChild(card);
       });
 
+      // ✅ Properly hide the button after success
       artistBtn.style.display = 'none';
     }
   } catch (err) {
