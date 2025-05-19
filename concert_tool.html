@@ -1,27 +1,120 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Find Concerts - TuneTrail</title>
-  <link rel="stylesheet" href="styles.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>TuneTrail</title>
+  <link rel="stylesheet" href="styles.css" />
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/annyang@2.6.1/dist/annyang.min.js"></script>
 </head>
 <body>
-  <header>
-    <nav class="navbar centered-navbar">
-      <a href="index.html" class="nav-link">Home</a>
-      <a href="about.html" class="nav-link">About</a>
-      <a href="concert_tool.html" class="nav-link">Tool</a>
-    </nav>
-  </header>
+  <nav>
+    <ul>
+      <li><a href="index.html">Home</a></li>
+      <li><a href="about.html">About</a></li>
+      <li><a href="tool.html">Tool</a></li>
+    </ul>
+  </nav>
 
-  <main class="container">
-    <h1>Find Concerts for Your Top Artists</h1>
-    <button id="login" onclick="authorize()">Login with Spotify</button>
-    <div id="loading" class="hidden">Loading concerts...</div>
-    <div id="concerts"></div>
+  <main>
+    <h1>Welcome to TuneTrail</h1>
+    <p>Login with Spotify to find concerts for your favorite artists!</p>
+    <button id="loginBtn">Login with Spotify</button>
+    <div id="artistSection" style="display:none">
+      <h2>Your Top Artists</h2>
+      <ul id="artistList"></ul>
+    </div>
+    <div id="concertSection" style="display:none">
+      <h2>Upcoming Concerts</h2>
+      <ul id="concertList"></ul>
+    </div>
+    <canvas id="artistChart" width="400" height="200" style="display:none;"></canvas>
   </main>
 
-  <script src="app.js"></script>
+  <script>
+    const loginBtn = document.getElementById('loginBtn');
+    const artistList = document.getElementById('artistList');
+    const concertList = document.getElementById('concertList');
+    const artistSection = document.getElementById('artistSection');
+    const concertSection = document.getElementById('concertSection');
+    const chartCanvas = document.getElementById('artistChart');
+
+    let accessToken = '';
+
+    loginBtn.onclick = async () => {
+      const clientId = 'dbc874061f684f23a2e2679152122b50';
+      const redirectUri = 'https://choieyj.github.io/';
+      const scopes = 'user-top-read';
+      window.location.href = `https://accounts.spotify.com/en/authorize?client_id=dbc874061f684f23a2e2679152122b50&response_type=code&redirect_uri=https://choieyj.github.io/`;
+    };
+
+    window.onload = async () => {
+      if (window.location.hash) {
+        accessToken = window.location.hash
+          .substring(1)
+          .split('&')
+          .find(elem => elem.startsWith('access_token'))
+          .split('=')[1];
+
+        const result = await fetch('https://api.spotify.com/v1/me/top/artists?limit=5&time_range=medium_term', {
+          headers: { Authorization: `Bearer ${accessToken}` }
+        });
+        const data = await result.json();
+
+        const artists = data.items.map(artist => artist.name);
+        artistList.innerHTML = '';
+        artists.forEach(artist => {
+          const li = document.createElement('li');
+          li.textContent = artist;
+          artistList.appendChild(li);
+          fetchConcerts(artist);
+        });
+        artistSection.style.display = 'block';
+        chartCanvas.style.display = 'block';
+        renderChart(artists);
+      }
+    };
+
+    async function fetchConcerts(artistName) {
+      const apiKey = '9W4IAiuiI9Oipich4R4AivG8IGyu8ERf';
+      const url = `https://app.ticketmaster.com/discovery/v2/events.json?keyword=${encodeURIComponent(artistName)}&apikey=${apiKey}`;
+      const response = await fetch(url);
+      const data = await response.json();
+      const events = data._embedded?.events || [];
+
+      events.forEach(event => {
+        const li = document.createElement('li');
+        li.innerHTML = `<strong>${event.name}</strong> - ${event.dates.start.localDate} @ ${event._embedded.venues[0].name}`;
+        concertList.appendChild(li);
+      });
+
+      concertSection.style.display = 'block';
+    }
+
+    function renderChart(artists) {
+      new Chart(chartCanvas, {
+        type: 'bar',
+        data: {
+          labels: artists,
+          datasets: [{
+            label: 'Top Artists (Spotify)',
+            data: Array(artists.length).fill(1),
+            backgroundColor: 'rgba(75, 192, 192, 0.5)',
+            borderColor: 'rgba(75, 192, 192, 1)',
+            borderWidth: 1
+          }]
+        },
+        options: {
+          responsive: true,
+          scales: {
+            y: {
+              beginAtZero: true
+            }
+          }
+        }
+      });
+    }
+  </script>
 </body>
 </html>
